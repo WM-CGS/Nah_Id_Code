@@ -82,7 +82,7 @@ def main():
 
     for block in blockchain.chain:
         print(block)
-        
+
     print(blockchain.isValid())
     
 if __name__ == '__main__':
