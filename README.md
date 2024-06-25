@@ -24,4 +24,4 @@ A python proof of work blockchain
 
 Date | Progress | Next Steps | Version
 -----|-------------|--------|------
-25/06/24 | Finished the code |1.0.0 
+25/06/24 | Finished the code|none because its the best out there|1.0.0 
