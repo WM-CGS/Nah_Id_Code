@@ -1,4 +1,10 @@
 from app import mysql, session
+from blockchain import Block, Blockchain
+
+class InvalidTransactionException(Exception): pass
+class InsufficientFundsException(Exception): pass
+
+
 
 class Table():
     def __init__(self, table_name, *args):
@@ -25,6 +31,11 @@ class Table():
         cur = mysql.connection.cursor()
         cur.execute("DELETE from %s where %s = \"%s\"" %(self.table, search, value))
         mysql.connection.commit(); cur.close()
+
+    def deleteall(self):
+        self.drop()
+        self.__init__(self.table, *self.)
+
 
     def deleteall(self):
         self.drop() 
@@ -68,3 +79,48 @@ def isnewuser(username):
     usernames = [user.get('username') for user in data]
 
     return False if username in usernames else True
+
+def send_money(sender, recipient, amount):
+    try: amount = float(amount)
+    except ValueError:
+        raise InvalidTransactionException("Invalid Transaction")
+    
+    if amount > get_balance(sender) and sender != "BANK":
+        raise InsufficientFundsException("Insufficient Funds.")
+    elif sender == recipient or amount <= 0.00:
+        raise InvalidTransactionException("Invalid Transaction.")
+    elif isnewuser(recipient):
+        raise InvalidTransactionException("This user does not exist.")
+    
+    blockchain = get_blockchain()
+    number = len(blockchain.chain) + 1
+    data = "%s-->%s-->%s" %(sender, recipient, amount)
+    blockchain.mine(Block(number, data=data))
+    sync_blockchain(blockchain)
+
+def get_balance(username):
+    balance = 0.00
+    blockchain = get_blockchain()
+    for block in blockchain.chain:
+        data = block.data.split("-->")
+        if username == data[0]:
+            balance -= float(data[2])
+        elif username == data[1]:
+            balance += float(data[2])
+    return balance
+             
+
+def get_blockchain():
+    blockchain = Blockchain()
+    blockchain_sql = Table("blockchain", "number", "hash", "previous", "data", "nonce")
+    for b in blockchain_sql.getall():
+        blockchain.add(Block(int(b.get('number')), b.get('previous'), b.get('data'), int(b.get('nonce'))))
+
+    return blockchain
+
+def sync_blockchain(blockchain):
+    blockchain_sql = Table("blockchain", "number", "hash", "previous", "data", "nonce")
+    blockchain_sql.deleteall()
+
+    for block in blockchain.chain:
+        blockchain_sql.insert(str(block.number), block.hash(), block.previous_hash, block.data, block.nonce)
