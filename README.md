@@ -10,6 +10,7 @@ A python proof of work blockchain
 - [Will Assad's GitHub][def2]
 - [Block Chain Theory - Geeks][def3]
 - [CGSCoder Github pyChain Repo][def4]
+- Really important video -> https://www.youtube.com/watch?v=zOa5o9Yq_ZU&pp=ygUOc2NyYXRjaCBob3cgdG8%3D
 
 [def1]: https://www.youtube.com/watch?v=b41TVaLwhKc&list=PLtCKS3CuBDYV_Vyl1ZH2Je8gSdXfQf4e3
 [def2]: https://github.com/willassad/cryptocurrencypython/tree/main
