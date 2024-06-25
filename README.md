@@ -1,5 +1,5 @@
 # Jujutsu-coin
-
+## NOTE I HAVE NO IDEA IF THE CODE ACTUALLY RUNS PROPERLY, DUE TO LIBRARIES BEING UNABLE TO BE DOWNLOADED (flask-mysqldb and another one)
 ![CoinIco](./assets/pyCoin.png)
 
 A python proof of work blockchain
