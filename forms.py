@@ -6,3 +6,10 @@ class RegisterForm(Form):
     email = StringField('Email', [validators.length(min=6,max=50)])
     password = PasswordField('Password', [validators.DataRequired(), validators.EqualTo('confirm', message='Passwords do not match')])
     confirm = PasswordField('Confirm Password')
+
+class SendMoneyForm(Form):
+    username = StringField('Username', [validators.length(min=4,max=25)])
+    amount = StringField('Amount', [validators.length(min=1,max=50)])
+
+class BuyForm(Form):
+    amount = StringField('Amount', [validators.length(min=1,max=50)])

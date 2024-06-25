@@ -81,6 +81,43 @@ def login():
                 return redirect(url_for('login'))
 
     return render_template('login.html')
+
+@app.route("/transaction", methods = ["GET", "POST"])
+@is_logged_in
+def transaction():
+    form =  SendMoneyForm(request.form)
+    balance = get_balance(session.get(username))
+
+    if request.method == "POST":
+        try:
+            send_money(session.get('username'), form.username.data, form.amount.data)
+            flash("Money Sent!", "success")
+        except Exception as e:
+            flash(str(e), 'danger')
+        
+        return redirect(url_for('transaction'))
+
+    return render_template(transaction.html, balance=balance, form=form, page='transaction')
+    
+
+@app.route("/buy", methods = ['GET', 'POST'])
+@is_logged_in
+def buy():
+    form = BuyForm(request.form)
+    balance = get_balance(session.get('username'))
+
+    if request.method == 'POST':
+        try:
+            send_money("BANK", session.get('username'), form.amount.data)
+            flash("Purchase Successful!", "success")
+        except Exception as e:
+            flash(str(e), 'danger')
+        
+        return redirect(url_for('dashboard'))
+
+    return render_template(buy.html, balance=balance, form=form, page='buy')
+
+
 @app.route("/logout")
 @is_logged_in
 def logout():
@@ -91,11 +128,12 @@ def logout():
 @app.route("/dashboard")
 @is_logged_in
 def dashboard():
-    return render_template('dashboard.html', session=session)
+    blockchain = get_blockchain().chain
+    ct = strftime("%I:%M %p")
+    return render_template('dashboard.html', session=session, ct=ct, blockchain=blockchain, page='dashboard')
 
 @app.route("/")
 def index():
-    
     return render_template('index.html')
 
 if name == '__main__':
